@@ -115,7 +115,9 @@ def _deep_merge(base: dict, override: dict) -> dict:
 def load_config() -> Dict:
     """Load and return application configuration with environment variable overrides."""
     config_path = Path(__file__).parent / "config.yml"
-    with open(config_path, "r") as config_file:
+    # Windows defaults to a legacy codepage (e.g. cp1252). Force UTF-8 so config.yml
+    # parses consistently across platforms.
+    with open(config_path, "r", encoding="utf-8") as config_file:
         user_config = yaml.safe_load(config_file) or {}
 
     # Deep-merge user config on top of defaults so missing keys get safe values
